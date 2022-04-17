@@ -35,7 +35,8 @@ class PostController extends Controller
         Post::create(
             [
                 'title' =>$data['title'],
-                'description' =>$data['description']
+                'description' =>$data['description'],
+                'user_id' =>$data['post_creator']
             ] 
          );
         return to_route('posts');
