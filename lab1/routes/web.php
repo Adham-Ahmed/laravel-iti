@@ -14,14 +14,9 @@ use App\Http\Controllers\PostController;
 |
 */
 
-Route::get('/', function () {
-    // return 'hello wolrd';
-    return view('welcome');
-});
-
-Route::get('/posts', [PostController::class, 'index']);
+Route::get('/posts', [PostController::class, 'index'])->name('posts');
 Route::get('/posts/create/', [PostController::class, 'create']);
-Route::post('/posts', [PostController::class, 'store']);
+Route::post('/posts/store', [PostController::class, 'store']);
 Route::get('/posts/show/{post}', [PostController::class, 'show']);
 Route::get('/posts/edit/{toEdit}', [PostController::class, 'edit']);
 Route::get('/posts/delete/{toDelete}', [PostController::class, 'delete']);

@@ -4,12 +4,12 @@
 @section('content')
 <h2>{{$idToEdit}}</h2>
 {{-- <h2>{{dd($posts[0]['title'])}}</h2> --}}
-<script>
+{{-- <script>
     var title=posts[$idToEdit].['title']
     var post_creator=posts[$idToEdit].['post_creator']
    
     var created_at=posts[$idToEdit].['created_at']
-</script>
+</script> --}}
     
         <form method="POST" action="/posts/store">
             @csrf
