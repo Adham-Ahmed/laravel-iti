@@ -16,8 +16,9 @@
       Post info
     </div>
    <div class="card-body">
-    Title : {{ $posts[$id-1]['title']}} <br>
-    Description:
+     {{-- @dd($posts['title']) --}}
+    Title : {{ $posts['title']}} <br>
+    Description:{{ $posts['description']}}
    </div>
   </div>
 
@@ -29,9 +30,9 @@
       Post Creator info
     </div>
    <div class="card-body">
-    Name : {{ $posts[$id-1]['post_creator']}} <br>
-    Email : {{ $posts[$id-1]['post_creator']}}@gmail.com<br>
-    Created at : {{ $posts[$id-1]['created_at']}} <br>
+    Name : {{ $posts['title']}} <br>
+    Email : {{ $posts['user']->name}}@gmail.com<br>
+    Created at : {{ $posts['created_at']}} <br>
 
    </div>
   </div>

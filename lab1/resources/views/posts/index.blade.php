@@ -17,11 +17,13 @@
               </tr>
             </thead>
             <tbody>
-            @foreach ( $posts as $post)        
+             
+            @foreach ( $posts as $post) 
+            {{-- @dd($post->user->name)   --}}
               <tr>
                 <td>{{ $post['id'] }}</th>
                 <td>{{ $post['title'] }}</td>
-                <td>{{ $post['post_creator'] }}</td>
+                <td>{{ $post->user->name }}</td>
                 <td>{{ $post['created_at'] }}</td>
                 <td>
                     <a href="/posts/show/{{$post['id']}}" class="btn btn-info">View</a>

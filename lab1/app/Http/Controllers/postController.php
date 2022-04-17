@@ -28,10 +28,7 @@ class PostController extends Controller
 
     public function store()
     {
-        // array_push($this->posts,$_POST);
         $data=request()->all(); //same as $_POST
-        // dd($data);
-        // Post::create($data);
         Post::create(
             [
                 'title' =>$data['title'],
@@ -41,12 +38,11 @@ class PostController extends Controller
          );
         return to_route('posts');
 
-        // return redirect()->route('posts');//, ['posts' => $this->posts]
     }
 
     public function show($postIdToShow)
     {
-        // return $postId;
+        $this->posts=Post::find($postIdToShow);
         return view('posts.show',[
             'id' => $postIdToShow,
             'posts' => $this->posts
@@ -56,7 +52,7 @@ class PostController extends Controller
 
     public function edit($idToEdit)
     {
-    //    return "toEdit ${editMe}";
+        $this->posts=Post::find($idToEdit);
     return view('posts.edit',[
         'idToEdit' => $idToEdit,
         'posts' => $this->posts
@@ -65,11 +61,33 @@ class PostController extends Controller
 
     }
 
+    public function update($id)
+    {
+        $data=request()->all(); //same as $_POST
+
+        $post = Post::find($id);
+ 
+        $post->title = $data['title'];
+        $post->description = $data['description'];['title'];
+         
+        $post->save();
+        return to_route('posts');
+    }
+
     public function delete($idToDelete)
     {
     return view('posts.delete',[
         'idToDelete' => $idToDelete,
-        'posts' => $this->posts
+        // 'posts' => $this->posts
         ]);
+    }
+
+    public function destroy($id)
+    {
+        dd("die");
+        $post = Post::find($id);
+        $post->delete();
+        return to_route('posts');
+
     }
 }
