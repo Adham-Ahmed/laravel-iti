@@ -5,7 +5,7 @@
 @section('content')
 
     
-<form method="POST" action="/posts/destory/{{$idToDelete}}">
+<form method="POST" action="/posts/destroy/{{$idToDelete}}">
             @csrf
             <h2>Are you sure u want to delete ?</h2>
             <button class="btn btn-danger"type="submit">Delete</button>

@@ -84,7 +84,6 @@ class PostController extends Controller
 
     public function destroy($id)
     {
-        dd("die");
         $post = Post::find($id);
         $post->delete();
         return to_route('posts');

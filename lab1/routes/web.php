@@ -18,7 +18,9 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts');
 Route::get('/posts/create/', [PostController::class, 'create']);
 Route::post('/posts/store', [PostController::class, 'store']);
 Route::post('/posts/update/{id}', [PostController::class, 'update']);
-Route::post('/posts/destroy/{id}', [PostController::class, 'destory']);
+Route::post('/posts/destroy/{id}', [PostController::class, 'destroy']);
 Route::get('/posts/show/{post}', [PostController::class, 'show']);
 Route::get('/posts/edit/{toEdit}', [PostController::class, 'edit']);
 Route::get('/posts/delete/{toDelete}', [PostController::class, 'delete']);
+// Route::get('/posts/destroy/{id}', [PostController::class, 'destory']);
+
