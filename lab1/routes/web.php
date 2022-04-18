@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+// use App\Http\Controllers\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,14 +14,19 @@ use App\Http\Controllers\PostController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', [PostController::class, 'index'])->middleware('auth');
+Route::get('/posts', [PostController::class, 'index'])->name('posts')->middleware('auth');
+Route::get('/posts/create/', [PostController::class, 'create'])->middleware('auth');
+Route::post('/posts/store', [PostController::class, 'store'])->middleware('auth');
+Route::post('/posts/update/{id}', [PostController::class, 'update'])->middleware('auth');
+Route::post('/posts/destroy/{id}', [PostController::class, 'destroy'])->middleware('auth');
+Route::get('/posts/show/{post}', [PostController::class, 'show'])->middleware('auth');
+Route::get('/posts/edit/{toEdit}', [PostController::class, 'edit'])->middleware('auth');
+Route::get('/posts/delete/{toDelete}', [PostController::class, 'delete'])->middleware('auth');
 
-Route::get('/posts', [PostController::class, 'index'])->name('posts');
-Route::get('/posts/create/', [PostController::class, 'create']);
-Route::post('/posts/store', [PostController::class, 'store']);
-Route::post('/posts/update/{id}', [PostController::class, 'update']);
-Route::post('/posts/destroy/{id}', [PostController::class, 'destroy']);
-Route::get('/posts/show/{post}', [PostController::class, 'show']);
-Route::get('/posts/edit/{toEdit}', [PostController::class, 'edit']);
-Route::get('/posts/delete/{toDelete}', [PostController::class, 'delete']);
-// Route::get('/posts/destroy/{id}', [PostController::class, 'destory']);
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware('auth')->name('home');
+Route::get('/logout', [PostController::class, 'index'])->middleware('auth');
+
 
