@@ -29,26 +29,28 @@ class PostController extends Controller
     }
     public function store(StorePostRequest $request)
     {
-        // $request = new StorePostRequest();
-        // request()->validate
         // request()->validate(
         //     [
         //         'title' => 'required',
         //         'description' => 'required',
-        //     ]
-        //     );
+        //     ]);
 
         $data=request()->all(); //same as $_POST
-        dd($data);
-        Post::create(
+        // dd($data);
+        $post=Post::create(
             [
                 'title' =>$data['title'],
                 'description' =>$data['description'],
-                'user_id' =>$data['post_creator']
+                'user_id' =>$data['user_id']
+
             ] 
          );
+        //   dd($post->id);
+       // $PostIdToAddSlugTo=Post::find($post->id);
+        $postToAddSlugTo = Post::find($post->id);
+        $postToAddSlugTo->slug = $post->slug;         
+        $postToAddSlugTo->save();
         return to_route('posts');
-
     }
 
     public function show($postIdToShow)
