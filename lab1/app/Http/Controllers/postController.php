@@ -12,11 +12,12 @@ class PostController extends Controller
     public $posts;
 
     public function index()
-    {
+    {  
        
-        $this->posts=Post::all();
+        // $this->posts=Post::all();
+        $this->posts=Post::paginate(10)->withQueryString();
         return view('posts.index',[
-            'posts' => $this->posts,
+            'posts' => $this->posts
         ]);
     }
 

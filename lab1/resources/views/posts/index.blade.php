@@ -33,7 +33,14 @@
               </tr>
               @endforeach
 
+              
             </tbody>
           </table>
 @endsection
+
+@section('paginate')
+  {{ $posts->links('pagination::bootstrap-4')}}
+@endsection
+
+
  

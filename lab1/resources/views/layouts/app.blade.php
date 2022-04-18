@@ -9,18 +9,20 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand " href="#">ITI Blog Post</a>
+        <a class="navbar-brand " href="{{ '/posts' }}">ITI Blog Post</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-link active" href="{{ '/posts/index' }}">All Posts</a>
+            <a class="nav-link active" href="{{ '/posts' }}">All Posts</a>
           </div>
         </div>
       </nav>
     <div class="container">
         @yield('content')
+    </div>
+    @yield('paginate')
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
