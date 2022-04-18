@@ -26,7 +26,8 @@
                 <td>{{ $post['title'] }}</td>
                 <td>{{ $post->user->name }}</td>
                 <td>{{ $post['slug'] }}</td>
-                <td>{{ $post['created_at'] }}</td>
+                <td>{{ \Carbon\Carbon::parse( $post->created_at )->toDateString(); }}</td>
+                {{-- <td>{{ $post['created_at'] }}</td> --}}
                 <td>
                     <a href="/posts/show/{{$post['id']}}" class="btn btn-info">View</a>
                     <a href="/posts/edit/{{$post['id']}}" class="btn btn-primary">Edit</a>

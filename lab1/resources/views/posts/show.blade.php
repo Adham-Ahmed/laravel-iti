@@ -32,7 +32,11 @@
    <div class="card-body">
     Name : {{ $posts['title']}} <br>
     Email : {{ $posts['user']->name}}@gmail.com<br>
-    Created at : {{ $posts['created_at']}} <br>
+    Created at : {{ \Carbon\Carbon::parse($posts['created_at'])->format('l jS \\of F Y h:i:s A')}} <br>
+
+   {{-- {{ 
+ Carbon::$posts['created_at']->format('l jS \\of F Y h:i:s A');
+   }} --}}
 
    </div>
   </div>
