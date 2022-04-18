@@ -3,6 +3,7 @@
 @section('title')Create @endsection
 
 @section('content')
+ 
         <form method="POST" action="/posts/store">
             @csrf
             <div class="mb-3">
@@ -27,4 +28,4 @@
           <button class="btn btn-success btn-lg">Create</button>
         </form>
 @endsection
-    
+        

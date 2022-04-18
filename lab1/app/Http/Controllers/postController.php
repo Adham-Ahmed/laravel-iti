@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\User;
+use App\Http\Requests\StorePostRequest;
 
 class PostController extends Controller
 
@@ -26,9 +27,17 @@ class PostController extends Controller
         $users=User::all();
         return view('posts.create',['users'=>$users]);
     }
-
-    public function store()
+    public function store(StorePostRequest $request)
     {
+        // $request = new StorePostRequest();
+        // request()->validate
+        // request()->validate(
+        //     [
+        //         'title' => 'required',
+        //         'description' => 'required',
+        //     ]
+        //     );
+
         $data=request()->all(); //same as $_POST
         Post::create(
             [
