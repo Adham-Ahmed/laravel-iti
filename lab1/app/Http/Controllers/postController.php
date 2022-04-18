@@ -39,6 +39,7 @@ class PostController extends Controller
         //     );
 
         $data=request()->all(); //same as $_POST
+        dd($data);
         Post::create(
             [
                 'title' =>$data['title'],
