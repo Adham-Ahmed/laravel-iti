@@ -15,6 +15,7 @@ class PostController extends Controller
 {
 
     public $posts;
+    public $imageName;
 
     public function index()
     {  
@@ -39,16 +40,19 @@ class PostController extends Controller
             [
                 'title' =>$data['title'],
                 'description' =>$data['description'],
-                'user_id' =>$data['user_id']
+                'user_id' =>$data['user_id'],
             ]);
 
             //
-
-            $this->processImage($request);
-
+            $imageName=$this->processImage($request);
+            // dd('after processImage');
+            $this->imageName=$imageName;
             //
             $postToAddSlugTo = Post::find($post->id);
-            $postToAddSlugTo->slug = $post->slug;         
+            $postToAddSlugTo->slug = $post->slug;
+            // 
+            //add name of image as well + slug to DB
+            $postToAddSlugTo->imageName=$imageName;   
             $postToAddSlugTo->save();
             return to_route('posts');
     }
@@ -62,11 +66,15 @@ class PostController extends Controller
         ]);
 
             $image= $request->file('image');
-            dd($image);
             $imageName = time().'.'.$request->image->extension();
-            $request->image->move(public_path('images'), $imageName);  
+            $path=storage_path('app\images\\');
+
+            // $request->image->move($path, $imageName);  
             $request->image->storeAs('images', $imageName);
-            // Storage::disk('local')->put('images/1/smalls'.'/'.$imageName, $image, 'public');
+
+            // Storage::put( 'images', $image);
+
+            return $imageName;
 
     }
 
@@ -115,20 +123,15 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = Post::find($id);
+        $imageName=$post->imageName;
         $post->delete();
+        $path=storage_path('app\images\\');
+        // dd($path.$imageName);
+        // Storage::delete($path.$imageName);
+        Storage::delete($path.'dFhrBBRBMdXc68XVwbBi4pxm1Sd2drOqOfmWekKA.png');
+
+        
         return to_route('posts');
 
     }
 }
-
-
-
-// Read what is Queue job and database queue driver then create Queue Job called PruneOldPostsJob
-// that when dispatched it deletes posts that are created from 2 years ago …. check mohamed said
-// video to understand more
-// - Read what is Task Scheduling then schedule PruneOldPostsJob to run daily at midnight
-// - Upload image to post , and validate extensions are only
-//  (.jpg, .png) , and use Storage to store and show images also when updating post we remove the old 
-// image, and when deleting post we remove the old image
-// https://laravel.com/docs/master/filesystem#file-uploads
-// Hint:- see if Mutators can make your code cleaner
