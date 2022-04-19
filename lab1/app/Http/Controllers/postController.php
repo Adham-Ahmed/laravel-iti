@@ -6,6 +6,9 @@ use App\Models\Post;
 use App\Models\User;
 use App\Http\Requests\StorePostRequest;
 use Carbon\Carbon;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Storage;
+// use App\Jobs\PruneOldPostsJob;
 
 class PostController extends Controller
 
@@ -16,8 +19,9 @@ class PostController extends Controller
     public function index()
     {  
        
-        // $this->posts=Post::all();
+        $posts=Post::all();
         $this->posts=Post::paginate(10)->withQueryString();
+        // PruneOldPostsJob::dispatch($posts);
         return view('posts.index',[
             'posts' => $this->posts
         ]);
@@ -30,28 +34,40 @@ class PostController extends Controller
     }
     public function store(StorePostRequest $request)
     {
-        // request()->validate(
-        //     [
-        //         'title' => 'required',
-        //         'description' => 'required',
-        //     ]);
-
-        $data=request()->all(); //same as $_POST
-        // dd($data);
-        $post=Post::create(
+         $data=request()->all(); //same as $_POST         
+         $post=Post::create(
             [
                 'title' =>$data['title'],
                 'description' =>$data['description'],
                 'user_id' =>$data['user_id']
+            ]);
 
-            ] 
-         );
-        //   dd($post->id);
-       // $PostIdToAddSlugTo=Post::find($post->id);
-        $postToAddSlugTo = Post::find($post->id);
-        $postToAddSlugTo->slug = $post->slug;         
-        $postToAddSlugTo->save();
-        return to_route('posts');
+            //
+
+            $this->processImage($request);
+
+            //
+            $postToAddSlugTo = Post::find($post->id);
+            $postToAddSlugTo->slug = $post->slug;         
+            $postToAddSlugTo->save();
+            return to_route('posts');
+    }
+
+    public function processImage($request)
+    {
+        $data=request()->all();
+
+        $request->validate([
+            'image' => 'required|image|mimes:png,jpg',
+        ]);
+
+            $image= $request->file('image');
+            dd($image);
+            $imageName = time().'.'.$request->image->extension();
+            $request->image->move(public_path('images'), $imageName);  
+            $request->image->storeAs('images', $imageName);
+            // Storage::disk('local')->put('images/1/smalls'.'/'.$imageName, $image, 'public');
+
     }
 
     public function show($postIdToShow)
@@ -104,3 +120,15 @@ class PostController extends Controller
 
     }
 }
+
+
+
+// Read what is Queue job and database queue driver then create Queue Job called PruneOldPostsJob
+// that when dispatched it deletes posts that are created from 2 years ago …. check mohamed said
+// video to understand more
+// - Read what is Task Scheduling then schedule PruneOldPostsJob to run daily at midnight
+// - Upload image to post , and validate extensions are only
+//  (.jpg, .png) , and use Storage to store and show images also when updating post we remove the old 
+// image, and when deleting post we remove the old image
+// https://laravel.com/docs/master/filesystem#file-uploads
+// Hint:- see if Mutators can make your code cleaner
