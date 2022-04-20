@@ -67,6 +67,7 @@ class PostController extends Controller
 
             $image= $request->file('image');
             $imageName = time().'.'.$request->image->extension();
+            $path=storage_path('app/images/');
             $path=storage_path('app\images\\');
 
             // $request->image->move($path, $imageName);  
@@ -126,9 +127,9 @@ class PostController extends Controller
         $imageName=$post->imageName;
         $post->delete();
         $path=storage_path('app\images\\');
-        // dd($path.$imageName);
-        // Storage::delete($path.$imageName);
-        Storage::delete($path.'dFhrBBRBMdXc68XVwbBi4pxm1Sd2drOqOfmWekKA.png');
+        Storage::delete('app\images\\'.$imageName);
+        Storage::delete('storage/app/images/'.$imageName);
+        Storage::delete($imageName);
 
         
         return to_route('posts');
