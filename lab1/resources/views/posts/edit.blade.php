@@ -20,13 +20,26 @@
             </div>
             {{-- @dd($posts->user->id) --}}
 
+
+            <br>
+            <div class="mb-3">
+                <label for="img">Select image:</label>
+                <input type="file" id="image" name="image">
+            </div>
+            
+            {{-- @dd($posts->user->id) --}}
+
+            
             <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label ">Post Creator</label>
-                <select class="form-control" name="post_creator">
+                <select class="form-control" name="user_id">
                     {{-- @foreach ($posts->user as $user) --}}
-                    {{-- @dd($posts->user->id) --}}
-                     <option value="{{$posts->user->id}}">{{$posts->user->name}}</option>
+                     {{-- <option value="{{$posts->user->id}}">{{$posts->user->name}}</option> --}}
                     {{-- @endforeach --}}
+
+                    @foreach ($users as $user)
+                     <option value="{{$user['id']}}">{{$user['name']}}</option>
+                    @endforeach
 
                 </select>
             </div>

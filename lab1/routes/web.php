@@ -29,4 +29,7 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware('auth')->name('home');
 Route::get('/logout', [PostController::class, 'index'])->middleware('auth');
 
+Route::post('test', [PostController::class, 'test']);
+
+
 

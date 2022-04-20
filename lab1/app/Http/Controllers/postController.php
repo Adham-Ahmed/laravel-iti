@@ -8,6 +8,7 @@ use App\Http\Requests\StorePostRequest;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 // use App\Jobs\PruneOldPostsJob;
 
 class PostController extends Controller
@@ -36,47 +37,29 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
          $data=request()->all(); //same as $_POST         
-         $post=Post::create(
-            [
-                'title' =>$data['title'],
-                'description' =>$data['description'],
-                'user_id' =>$data['user_id'],
+       
+
+            $request->validate([
+                'image' => 'required|image|mimes:png,jpg',
             ]);
+    
+                $image= $request->file('image');
+                $imageName = Storage::putFile("images",$image);
+
+
+                $post=Post::create(
+                    [
+                        'title' =>$data['title'],
+                        'description' =>$data['description'],
+                        'user_id' =>$data['user_id'],
+                        'imageName' =>$imageName,
+                    ]);
 
             //
-            $imageName=$this->processImage($request);
-            // dd('after processImage');
-            $this->imageName=$imageName;
-            //
-            $postToAddSlugTo = Post::find($post->id);
-            $postToAddSlugTo->slug = $post->slug;
-            // 
-            //add name of image as well + slug to DB
-            $postToAddSlugTo->imageName=$imageName;   
+            $postToAddSlugTo = $post;//for readability of next line
+            $postToAddSlugTo->slug = $post->slug;  
             $postToAddSlugTo->save();
             return to_route('posts');
-    }
-
-    public function processImage($request)
-    {
-        $data=request()->all();
-
-        $request->validate([
-            'image' => 'required|image|mimes:png,jpg',
-        ]);
-
-            $image= $request->file('image');
-            $imageName = time().'.'.$request->image->extension();
-            $path=storage_path('app/images/');
-            $path=storage_path('app\images\\');
-
-            // $request->image->move($path, $imageName);  
-            $request->image->storeAs('images', $imageName);
-
-            // Storage::put( 'images', $image);
-
-            return $imageName;
-
     }
 
     public function show($postIdToShow)
@@ -92,23 +75,49 @@ class PostController extends Controller
     public function edit($idToEdit)
     {
         $this->posts=Post::find($idToEdit);
-    return view('posts.edit',[
-        'idToEdit' => $idToEdit,
-        'posts' => $this->posts
+        $users=User::all();
+
+          return view('posts.edit',[
+            'idToEdit' => $idToEdit,
+            'posts' => $this->posts,
+            'users'=>$users
         
         ]);
 
+        // return view('posts.create',[
+        // 'idToEdit' => $idToEdit,
+        // 'users'=>$users
+        // ]);
+
+
     }
 
-    public function update($id)
+    public function update($id,Request $request)
     {
-        $data=request()->all(); //same as $_POST
 
+        $request->validate([
+            'title' => 'required|string|min:3',
+            'imageName' => 'nullable|image|mimes:jpg,png',
+            'description' => 'required|string|min:10',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $data=request()->all(); //same as $_POST
         $post = Post::find($id);
- 
         $post->title = $data['title'];
-        $post->description = $data['description'];['title'];
-         
+        $post->description = $data['description'];
+        $post->user_id = $data['user_id'];
+        //if image is sent in request
+        if($request('image')->isValid()){
+            //1) delete old image from filesystems
+            Storage::delete($post->imageName);/////
+            //2)save new image to filesys.
+            $image= $request->file('image');
+            $imageName = Storage::putFile("images",$image);
+            //3)save new image name to DB
+            $post->imageName = $data['imageName'];
+         }
+        
         $post->save();
         return to_route('posts');
     }
@@ -117,22 +126,18 @@ class PostController extends Controller
     {
     return view('posts.delete',[
         'idToDelete' => $idToDelete,
-        // 'posts' => $this->posts
         ]);
     }
 
     public function destroy($id)
     {
-        $post = Post::find($id);
+        $post = Post::findOrFail($id);
         $imageName=$post->imageName;
+
+        Storage::delete($imageName);/////
         $post->delete();
-        $path=storage_path('app\images\\');
-        Storage::delete('app\images\\'.$imageName);
-        Storage::delete('storage/app/images/'.$imageName);
-        Storage::delete($imageName);
-
-        
+             
         return to_route('posts');
-
     }
+
 }
