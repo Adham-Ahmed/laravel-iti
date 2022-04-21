@@ -7,6 +7,7 @@
     
         <form method="POST"  action="/posts/update/{{$idToEdit}}" enctype="multipart/form-data" >
             @csrf
+            @method('put')
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">Title</label>
                 <input type="text" class="form-control" id="exampleFormControlInput1" value="{{$posts['title']}}" placeholder="" name="title"  />

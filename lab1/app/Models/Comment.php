@@ -11,6 +11,8 @@ class Comment extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    protected $gaurded=[];
     protected $fillable = [
         'comment',
         'commentable_type',

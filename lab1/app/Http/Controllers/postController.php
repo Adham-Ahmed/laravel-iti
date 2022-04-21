@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\User;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdateRequest;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Storage;
@@ -83,19 +84,14 @@ class PostController extends Controller
         ]);
     }
 
-    public function update(Request $request,$id)
+    public function update(UpdateRequest $request,$id)
     {
         // $request->validate([
-        //     'image' => 'required|image|mimes:png,jpg',
+        //     'title' => 'required|string|min:3',
+        //     'imageName' => 'nullable|image|mimes:jpg,png',
+        //     'description' => 'required|string|min:10',
+        //     'user_id' => 'required|exists:users,id',
         // ]);
-        // dd($request->file('image'));
-        ////////// <CONTINUE_FROM_HERE></CONTINUE_FROM_HERE>
-        $request->validate([
-            'title' => 'required|string|min:3',
-            'imageName' => 'nullable|image|mimes:jpg,png',
-            'description' => 'required|string|min:10',
-            'user_id' => 'required|exists:users,id',
-        ]);
 
         $data=request()->all(); //same as $_POST
         $post = Post::find($id);
@@ -111,11 +107,11 @@ class PostController extends Controller
             //1) delete old image from filesystems
             if ($post->imageName) {
                 Storage::delete($post->imageName);
-            }/////
+            }
             //2)save new image to filesys.
             $image= $request->file('image');
             $imageName = Storage::putFile("images",$image);
-            //3)save new image name to DB
+            //3)save new image path to DB
             $post->imageName = $imageName;
 
             
@@ -139,7 +135,11 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         $imageName=$post->imageName;
 
+        if($imageName)
+        {
         Storage::delete($imageName);/////
+
+        }
         $post->delete();
              
         return to_route('posts');
