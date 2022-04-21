@@ -36,15 +36,13 @@ class PostController extends Controller
     }
     public function store(StorePostRequest $request)
     {
-         $data=request()->all(); //same as $_POST         
-       
-
-            $request->validate([
-                'image' => 'required|image|mimes:png,jpg',
-            ]);
-    
+         $data=request()->all(); //same as $_POST 
+         $imageName="not_uploaded";        
+            if($request->hasFile('images'))
+                {
                 $image= $request->file('image');
                 $imageName = Storage::putFile("images",$image);
+                }
 
                 //@param  \Illuminate\Http\Request  $request
                 $post=Post::create(
@@ -104,14 +102,10 @@ class PostController extends Controller
         $post->title = $data['title'];
         $post->description = $data['description'];
         $post->user_id = $data['user_id'];
-        // dd($post);
-        //if image is sent in request
-        //HERE####################
-        // dd($request('image'));
-        //file not seen as sent so below if block not executed
+
         if($request->hasFile('image')){
             $request->validate([
-                'image' => 'required|image|mimes:png,jpg',
+                'image' => 'image|mimes:png,jpg',
             ]);
 
             //1) delete old image from filesystems
@@ -124,9 +118,10 @@ class PostController extends Controller
             //3)save new image name to DB
             $post->imageName = $imageName;
 
-            $postToEditSlugFor= $post;//for readability of next line
-            $postToEditSlugFor->slug = $post->slug;
-         }
+            
+        }
+        $post->slug=null;
+        $post->slug = $post->slug;//slug field in DB = slugged title
         
         $post->save();
         return to_route('posts');
