@@ -46,7 +46,7 @@ class PostController extends Controller
                 $image= $request->file('image');
                 $imageName = Storage::putFile("images",$image);
 
-
+                //@param  \Illuminate\Http\Request  $request
                 $post=Post::create(
                     [
                         'title' =>$data['title'],
@@ -83,18 +83,15 @@ class PostController extends Controller
             'users'=>$users
         
         ]);
-
-        // return view('posts.create',[
-        // 'idToEdit' => $idToEdit,
-        // 'users'=>$users
-        // ]);
-
-
     }
 
-    public function update($id,Request $request)
+    public function update(Request $request,$id)
     {
-
+        // $request->validate([
+        //     'image' => 'required|image|mimes:png,jpg',
+        // ]);
+        // dd($request->file('image'));
+        ////////// <CONTINUE_FROM_HERE></CONTINUE_FROM_HERE>
         $request->validate([
             'title' => 'required|string|min:3',
             'imageName' => 'nullable|image|mimes:jpg,png',
@@ -107,15 +104,28 @@ class PostController extends Controller
         $post->title = $data['title'];
         $post->description = $data['description'];
         $post->user_id = $data['user_id'];
+        // dd($post);
         //if image is sent in request
-        if($request('image')->isValid()){
+        //HERE####################
+        // dd($request('image'));
+        //file not seen as sent so below if block not executed
+        if($request->hasFile('image')){
+            $request->validate([
+                'image' => 'required|image|mimes:png,jpg',
+            ]);
+
             //1) delete old image from filesystems
-            Storage::delete($post->imageName);/////
+            if ($post->imageName) {
+                Storage::delete($post->imageName);
+            }/////
             //2)save new image to filesys.
             $image= $request->file('image');
             $imageName = Storage::putFile("images",$image);
             //3)save new image name to DB
-            $post->imageName = $data['imageName'];
+            $post->imageName = $imageName;
+
+            $postToEditSlugFor= $post;//for readability of next line
+            $postToEditSlugFor->slug = $post->slug;
          }
         
         $post->save();
