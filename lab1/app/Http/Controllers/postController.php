@@ -10,7 +10,6 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
-// use App\Jobs\PruneOldPostsJob;
 
 class PostController extends Controller
 
@@ -24,7 +23,6 @@ class PostController extends Controller
        
         $posts=Post::all();
         $this->posts=Post::paginate(10)->withQueryString();
-        // PruneOldPostsJob::dispatch($posts);
         return view('posts.index',[
             'posts' => $this->posts
         ]);
@@ -45,7 +43,6 @@ class PostController extends Controller
                 $imageName = Storage::putFile("images",$image);
                 }
 
-                //@param  \Illuminate\Http\Request  $request
                 $post=Post::create(
                     [
                         'title' =>$data['title'],
@@ -86,13 +83,6 @@ class PostController extends Controller
 
     public function update(UpdateRequest $request,$id)
     {
-        // $request->validate([
-        //     'title' => 'required|string|min:3',
-        //     'imageName' => 'nullable|image|mimes:jpg,png',
-        //     'description' => 'required|string|min:10',
-        //     'user_id' => 'required|exists:users,id',
-        // ]);
-
         $data=request()->all(); //same as $_POST
         $post = Post::find($id);
         $post->title = $data['title'];
