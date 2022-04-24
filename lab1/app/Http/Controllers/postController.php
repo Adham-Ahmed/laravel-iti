@@ -61,6 +61,11 @@ class PostController extends Controller
     public function show($postIdToShow)
     {
         $this->posts=Post::find($postIdToShow);
+
+        $posts=Post::find($postIdToShow);
+
+        // dd($posts->comments->all());
+
         return view('posts.show',[
             'id' => $postIdToShow,
             'posts' => $this->posts

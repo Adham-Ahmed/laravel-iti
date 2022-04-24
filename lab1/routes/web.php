@@ -1,22 +1,27 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
+
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 // use App\Http\Controllers\Auth;
-
-Route::get('/', [PostController::class, 'index'])->middleware('auth');
-Route::get('/posts', [PostController::class, 'index'])->name('posts')->middleware('auth');
-Route::get('/posts/create/', [PostController::class, 'create'])->middleware('auth');
-Route::post('/posts/store', [PostController::class, 'store'])->middleware('auth');
-Route::put('/posts/update/{id}', [PostController::class, 'update'])->middleware('auth');
-Route::delete('/posts/destroy/{id}', [PostController::class, 'destroy'])->middleware('auth');
-Route::get('/posts/show/{post}', [PostController::class, 'show'])->middleware('auth');
-Route::get('/posts/edit/{toEdit}', [PostController::class, 'edit'])->middleware('auth');
-Route::get('/posts/delete/{toDelete}', [PostController::class, 'delete'])->middleware('auth');
-
+Route::middleware('auth')->group(function() {
+    Route::get('/', [PostController::class, 'index']);
+    Route::get('/posts', [PostController::class, 'index'])->name('posts');
+    Route::get('/posts/create/', [PostController::class, 'create']);
+    Route::post('/posts/store', [PostController::class, 'store'])->name('posts.store');
+    Route::put('/posts/update/{id}', [PostController::class, 'update']);
+    Route::delete('/posts/destroy/{id}', [PostController::class, 'destroy']);
+    Route::get('/posts/show/{post}', [PostController::class, 'show'])->name('posts.show');
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::delete('/posts/{post}/comments/{comment}/delete', [CommentController::class, 'delete'])->name('comments.delete');
+    Route::get('/posts/{post}/comments/{comment}/restore', [CommentController::class, 'restore'])->name('comments.restore');
+    Route::get('/posts/edit/{toEdit}', [PostController::class, 'edit']);
+    Route::get('/posts/delete/{toDelete}', [PostController::class, 'delete']);
+});
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware('auth')->name('home');
