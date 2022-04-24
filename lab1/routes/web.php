@@ -22,9 +22,6 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware('auth')->name('home');
 Route::get('/logout', [PostController::class, 'index'])->middleware('auth');
 
- 
-
-
 ///////////////GITHUB//////////////////
 Route::get('/auth/redirect', function () {
     return Socialite::driver('github')->redirect();
