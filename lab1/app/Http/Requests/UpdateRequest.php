@@ -23,8 +23,9 @@ class UpdateRequest extends FormRequest
      */
     public function rules()
     {
+        $title = $this->request->get('title');
         return [
-            'title' => 'required|string|min:3',
+            'title' => ['required','min:3',Rule::unique('posts')->ignore($title, 'title')],
             'imageName' => 'nullable|image|mimes:jpg,png',
             'description' => 'required|string|min:10',
             'user_id' => 'required|exists:users,id',
