@@ -10,7 +10,7 @@
 - Run `php artisan serve` to start development server
 
 ![BlogLaravel](BlogLaravel.gif)
-![API_Blog_Laravel](API_Blog_Laravel)
+![API_Blog_Laravel](API_Blog_Laravel.gif)
 
 
 
