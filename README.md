@@ -9,7 +9,7 @@
 - Run `php artisan migrate` to create DB tables
 - Run `php artisan serve` to start development server
 
-[]!BlogLaravel.gif
+![BlogLaravel](BlogLaravel.gif)
 
 
 
